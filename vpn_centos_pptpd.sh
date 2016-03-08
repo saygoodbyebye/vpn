@@ -54,7 +54,7 @@ function installVPN(){
 
 	echo "vpn pptpd ${pass} *" >> /etc/ppp/chap-secrets
 
-	iptables -t nat -A POSTROUTING -s 172.16.36.0/24 -j SNAT --to-source `curl ip.cn | awk -F ' |：' '{print $3}'`
+	iptables -t nat -A POSTROUTING -s 172.16.36.0/24 -j SNAT --to-source `curl ipip.net | awk -F ' ' '{print $2}' | awk -F '：' '{print $2}'`
 	iptables -A FORWARD -p tcp --syn -s 172.16.36.0/24 -j TCPMSS --set-mss 1356
 	iptables -I INPUT -p gre -j ACCEPT
 	iptables -I INPUT -p tcp -m tcp --dport 1723 -j ACCEPT
