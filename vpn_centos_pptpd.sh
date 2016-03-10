@@ -20,6 +20,8 @@ function installVPN(){
 		yum install policycoreutils -y
 		systemctl stop firewalld
 		systemctl mask firewalld
+		#centos7需要加这个权限，否则不会开机自动执行
+		chmod +x /etc/rc.d/rc.local
 	fi
 	
 	#先删除已经安装的pptpd和ppp
