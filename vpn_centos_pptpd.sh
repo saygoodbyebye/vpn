@@ -16,10 +16,9 @@ function installVPN(){
 	elif [ "$ver1" == "7" ]; then
 		rpm -Uvh http://download.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 		#centos7要安装iptables把默认防火墙关了。
-		yum install iptables-services -y
-		yum install policycoreutils -y
-		systemctl stop firewalld
-		systemctl mask firewalld
+		systemctl stop firewalld.service
+		systemctl disable firewalld.service
+		yum install iptables-services -y		
 		#centos7需要加这个权限，否则不会开机自动执行
 		chmod +x /etc/rc.d/rc.local
 	fi
