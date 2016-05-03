@@ -7,18 +7,14 @@ function installVPN(){
 	#判断centos版本
 	yum install redhat-lsb -y
 	yum install wget vim curl -y
+	yum install epel-release
 	ver1str="lsb_release -rs | awk -F '.' '{ print \$1}'"
 	ver1=$(eval $ver1str)
-	if [ "$ver1" == "6" ]; then
-		rpm -Uvh http://download.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
-	elif [ "$ver1" == "5" ]; then
-		rpm -Uvh http://download.fedoraproject.org/pub/epel/epel-release-latest-5.noarch.rpm
-	elif [ "$ver1" == "7" ]; then
-		rpm -Uvh http://download.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+	if [ "$ver1" == "7" ]; then
 		#centos7要安装iptables把默认防火墙关了。
+		yum install iptables-services -y
 		systemctl stop firewalld.service
 		systemctl disable firewalld.service
-		yum install iptables-services -y		
 		#centos7需要加这个权限，否则不会开机自动执行
 		chmod +x /etc/rc.d/rc.local
 	fi
@@ -35,7 +31,7 @@ function installVPN(){
 	
 	
 	
-	rpm -Uvh http://poptop.sourceforge.net/yum/stable/rhel6/pptp-release-current.noarch.rpm
+	#rpm -Uvh http://poptop.sourceforge.net/yum/stable/rhel6/pptp-release-current.noarch.rpm
 	yum install -y ppp pptpd
 
 	#写配置文件
