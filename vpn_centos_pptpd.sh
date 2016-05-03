@@ -5,33 +5,32 @@ function installVPN(){
 	#check wether vps suppot ppp and tun
 	
 	#判断centos版本
-	yum install redhat-lsb -y
-	yum install wget vim curl -y
-	yum install epel-release
-	ver1str="lsb_release -rs | awk -F '.' '{ print \$1}'"
-	ver1=$(eval $ver1str)
+	if grep -Eqi "release 5." /etc/redhat-release; then
+		ver1='5'
+	elif grep -Eqi "release 6." /etc/redhat-release; then
+		ver1='6'
+	elif grep -Eqi "release 7." /etc/redhat-release; then
+		ver1='7'
+	fi
+	
+	yum install curl -y
+	yum install epel-release -y
+
 	if [ "$ver1" == "7" ]; then
 		#centos7要安装iptables把默认防火墙关了。
-		yum install iptables-services -y
 		systemctl stop firewalld.service
 		systemctl disable firewalld.service
+		yum install iptables-services -y
 		#centos7需要加这个权限，否则不会开机自动执行
 		chmod +x /etc/rc.d/rc.local
 	fi
 	
 	#先删除已经安装的pptpd和ppp
-	yum remove -y pptpd ppp
-	iptables --flush POSTROUTING --table nat
-	iptables --flush FORWARD
 	rm -rf /etc/pptpd.conf
 	rm -rf /etc/ppp
 	
 	
-	
-	
-	
-	
-	#rpm -Uvh http://poptop.sourceforge.net/yum/stable/rhel6/pptp-release-current.noarch.rpm
+
 	yum install -y ppp pptpd
 
 	#写配置文件
@@ -57,7 +56,7 @@ function installVPN(){
 	iptables -I INPUT -p tcp -m tcp --dport 1723 -j ACCEPT
 	service iptables save
 
-	if [ "ver1" == "7"]; then
+	if [ "ver1" == "7" ]; then
 		systemctl enable iptables.service
 		systemctl enable pptpd.service
 		systemctl restart iptables.service
