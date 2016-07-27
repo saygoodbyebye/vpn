@@ -40,9 +40,10 @@ function installVPN(){
 	echo "echo 1 > /proc/sys/net/ipv4/ip_forward" >> /etc/rc.local
 	echo "localip 172.16.36.1" >> /etc/pptpd.conf
 	echo "remoteip 172.16.36.2-254" >> /etc/pptpd.conf
-	echo "ms-dns 8.8.8.8" >> /etc/ppp/options.pptpd
-	echo "ms-dns 8.8.4.4" >> /etc/ppp/options.pptpd
-
+	echo "ms-dns 223.5.5.5" >> /etc/ppp/options.pptpd
+	echo "ms-dns 114.114.114.114" >> /etc/ppp/options.pptpd
+        echo "ms-dns 208.67.222.222" >> /etc/ppp/options.pptpd
+        
 	pass=`openssl rand 6 -base64`
 	if [ "$1" != "" ]
 	then pass=$1
